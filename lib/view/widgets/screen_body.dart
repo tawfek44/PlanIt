@@ -1,88 +1,98 @@
+
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:screenshot/screenshot.dart';
 
 import '../../core/constants/constants.dart';
 
 class ScreenBody extends StatefulWidget {
-  const ScreenBody({super.key});
+   ScreenBody({super.key});
+
 
   @override
   State<ScreenBody> createState() => _ScreenBodyState();
 }
 
 class _ScreenBodyState extends State<ScreenBody> {
-  GlobalKey key = GlobalKey();
-   Color initialColor= Colors.white;
+   Color initialColor = Colors.white;
+   GlobalKey globalKey = GlobalKey();
+   ScreenshotController screenshotController = ScreenshotController();
   @override
   Widget build(BuildContext context) {
-    print(initialColor);
-    return Padding(
-      padding:  EdgeInsets.only(top: 55.h),
-      child: Stack(
-        children: [
-          Image.asset(rectangleImageAssetPath,width: double.infinity),
-        Column(
+    return Screenshot(
+      controller: screenshotController,
+      child: Padding(
+        padding: EdgeInsets.only(top: 55.h),
+        child: Stack(
           children: [
-            getHeaderIcons(),
-            SizedBox(
-              height: 5.h,
-            ),
-            Image.asset(aramithWordImage),
-            SizedBox(
-              height: 15.h,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.asset(gameImage,width: MediaQuery.of(context).size.width-50.w),
-                Column(
-                  children: [
-                    Draggable(
-                     childWhenDragging: Opacity(opacity: 0.5, child: Image.asset(ball1Image)),
-                        feedback: Image.asset(ball1Image),
-                    child: Image.asset(ball1Image)),
-                    SizedBox(height: 5.h,),
-                    GestureDetector(
-                      key: key,
-                        child: Image.asset(ball2Image),
-                    ),
-                    SizedBox(height: 5.h,),
-                    Image.asset(ball3Image),
-                    SizedBox(height: 5.h,),
-                    Image.asset(ball4Image),
-                    SizedBox(height: 5.h,),
-                    Image.asset(ball5Image),
-                    SizedBox(height: 5.h,),
-                    Image.asset(ball6Image),
-                    SizedBox(height: 5.h,),
-                    Image.asset(ball7Image),
-                    SizedBox(height: 5.h,),
-                    Image.asset(ball8Image),
-                    SizedBox(height: 5.h,),
-                    Image.asset(ball9Image),
-                    SizedBox(height: 5.h,),
-                    Image.asset(ball10Image),
-                    SizedBox(height: 5.h,),
-                    Image.asset(ball11Image),
-                    SizedBox(height: 5.h,),
-                    Image.asset(ball12Image),
-                    SizedBox(height: 5.h,),
-                    Image.asset(ball13Image),
-                    SizedBox(height: 5.h,),
-                    Image.asset(ball14Image),
-                    SizedBox(height: 5.h,),
-                    Image.asset(ball15Image),
-                  ],
-                )
-              ],
-            )
+            Image.asset(rectangleImageAssetPath,width: double.infinity),
+          Column(
+            children: [
+              getHeaderIcons(),
+              SizedBox(
+                height: 5.h,
+              ),
+              Image.asset(aramithWordImage),
+              SizedBox(
+                height: 15.h,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(gameImage,width: MediaQuery.of(context).size.width-50.w),
+                  Column(
+                    children: [
+                      Draggable(
+                       childWhenDragging: Opacity(opacity: 0.5, child: Image.asset(ball1Image)),
+                          feedback: Image.asset(ball1Image),
+                      child: Image.asset(ball1Image)),
+                      SizedBox(height: 5.h,),
+                      GestureDetector(
+                        key: globalKey,
+                          child: Image.asset(ball2Image),
+                      ),
+                      SizedBox(height: 5.h,),
+                      Image.asset(ball3Image),
+                      SizedBox(height: 5.h,),
+                      Image.asset(ball4Image),
+                      SizedBox(height: 5.h,),
+                      Image.asset(ball5Image),
+                      SizedBox(height: 5.h,),
+                      Image.asset(ball6Image),
+                      SizedBox(height: 5.h,),
+                      Image.asset(ball7Image),
+                      SizedBox(height: 5.h,),
+                      Image.asset(ball8Image),
+                      SizedBox(height: 5.h,),
+                      Image.asset(ball9Image),
+                      SizedBox(height: 5.h,),
+                      Image.asset(ball10Image),
+                      SizedBox(height: 5.h,),
+                      Image.asset(ball11Image),
+                      SizedBox(height: 5.h,),
+                      Image.asset(ball12Image),
+                      SizedBox(height: 5.h,),
+                      Image.asset(ball13Image),
+                      SizedBox(height: 5.h,),
+                      Image.asset(ball14Image),
+                      SizedBox(height: 5.h,),
+                      Image.asset(ball15Image),
+                    ],
+                  )
+                ],
+              )
+
+            ],
+          )
 
           ],
-        )
-
-        ],
+        ),
       ),
     );
   }
@@ -137,12 +147,27 @@ class _ScreenBodyState extends State<ScreenBody> {
         ),
         const Spacer(),
         IconButton(
-          onPressed: () {  },
+          onPressed: () async{
+            final image = await screenshotController.capture();
+            if(image == null)return ;
+            await saveImage(image);
+          },
           icon: Image.asset(capturedImageAssetPath),
         ),
       ],
     ),
   );
+
+  Future<String> saveImage(Uint8List image) async {
+    await [Permission.storage].request();
+    final time = DateTime.now().toIso8601String().replaceAll('.', '-').replaceAll(':', "-");
+
+    final name = "ScreenShot_$time";
+    final result = await ImageGallerySaver.saveImage(image,name: name);
+
+    return result['filePath'];
+
+  }
 
 
 }

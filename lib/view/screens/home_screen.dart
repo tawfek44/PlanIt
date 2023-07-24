@@ -13,14 +13,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  GlobalKey globalKey=GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
-        children: const [
+        children:  [
           Stack(
             children: [
-              ScreenHeader(),
+              const ScreenHeader(),
               ScreenBody(),
             ],
           )
