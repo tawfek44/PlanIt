@@ -139,6 +139,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  native_screenshot_ext:
+    dependency: "direct main"
+    description:
+      name: native_screenshot_ext
+      sha256: "456088bea54bbcfdedf3ef0fc9543699fbc8fd03b8b1933c4658dfe5f6cd3f84"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.5"
   path:
     dependency: transitive
     description:

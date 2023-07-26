@@ -40,6 +40,7 @@ dependencies:
   screenshot: ^2.1.0
   image_gallery_saver: ^2.0.3
   permission_handler: ^10.4.3
+  native_screenshot_ext: ^1.2.5
 
 dev_dependencies:
   flutter_test:
